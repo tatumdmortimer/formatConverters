@@ -5,6 +5,7 @@ import sys
 sys.path.insert(1, "/home/peplab/src/alignio-maf")
 try:
     from Bio import AlignIO
+    from Bio.AlignIO import MafIO
 except ImportError:
     print "oops, the import didn't work"
 from Bio.Alphabet import IUPAC,Gapped
@@ -15,11 +16,11 @@ from operator import itemgetter
 #nexus alignment
 
 # check for correct arguments
-if len(sys.argv) != 3:
+if len(sys.argv) != 5:
     print("Usage: MAFToNexus.py <reference> <reference genome size> <inputfile> <outputfile>")
     sys.exit(0)
 
-ref = sys.argv[1]
+reference = sys.argv[1]
 genomeSize = int(sys.argv[2])
 input_name = sys.argv[3]
 output_name = sys.argv[4]
@@ -30,32 +31,39 @@ outfile = open(output_name, 'w')
 # read in MAF file
 multiple_alignment = AlignIO.parse(infile, 'maf', alphabet=Gapped(IUPAC.ambiguous_dna, '-'))
 
+# make MAF index file
+idx = MafIO.MafIndex(reference + ".mafindex", input_name, reference)
+
+new_alignment = idx.get_spliced([0], [genomeSize], strand = "+1")
+
+AlignIO.write(new_alignment, output_name, "fasta")
+
 # take blocks that contain reference sequence and add them to a list
-alignment = []
-for a in multiple_alignment:
-    if a[0].id.startswith(ref):
-        alignment.append((int(a[0].annotations["start"]),a))
+#alignment = []
+#for a in multiple_alignment:
+#    if a[0].id.startswith(ref):
+#        alignment.append((int(a[0].annotations["start"]),a))
 
 # sort the block list by start of ref sequence
-sorted_alignment = sorted(alignment, key=itemgetter(0))
+#sorted_alignment = sorted(alignment, key=itemgetter(0))
 
 # make a dictionary for genome sequences
-genomeDict = {}
+#genomeDict = {}
 
 # read blocks and edit genome dictionary
-for block in sorted_alignment:
-    block = block[1] # get rid of tuple format    
-    # get start and stop sites for reference
-    blockStart = int(a[0].annotations["start"])
-    blockStop = blockStart + int(a[0].annotations["size"])
-    for seqRecord in block:
-        strainName = seqRecord.id.split('.')[0]
-        if strainName not in genomeDict:
-            # add sequence to genome dictionary
-            # using '-' as placeholder until actual sequence is added
-            genomeDict[strainName] = ['-']*genomeSize
-        genome = genomeDict[strainName]
-        genome[blockStart:blockStop] = list(seqRecord.seq)
-        genomeDict[strainName] = genome
-        
-outfile.close()
+#for block in sorted_alignment:
+#    block = block[1] # get rid of tuple format    
+#    # get start and stop sites for reference
+#    blockStart = int(a[0].annotations["start"])
+#    blockStop = blockStart + int(a[0].annotations["size"])
+#    for seqRecord in block:
+#        strainName = seqRecord.id.split('.')[0]
+#        if strainName not in genomeDict:
+#            # add sequence to genome dictionary
+#            # using '-' as placeholder until actual sequence is added
+#            genomeDict[strainName] = ['-']*genomeSize
+#        genome = genomeDict[strainName]
+#        genome[blockStart:blockStop] = list(seqRecord.seq)
+#        genomeDict[strainName] = genome
+#        
+#outfile.close()
