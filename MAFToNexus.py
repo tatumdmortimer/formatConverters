@@ -9,6 +9,7 @@ try:
 except ImportError:
     print "oops, the import didn't work"
 from Bio.Alphabet import IUPAC,Gapped
+from Bio.Align import MultipleSeqAlignment
 from operator import itemgetter
 
 
@@ -17,7 +18,8 @@ from operator import itemgetter
 
 # check for correct arguments
 if len(sys.argv) != 5:
-    print("Usage: MAFToNexus.py <reference> <reference genome size> <inputfile> <outputfile>")
+    print("Usage: MAFToNexus.py <reference> <reference genome size> \
+    <inputfile> <outputfile>")
     sys.exit(0)
 
 reference = sys.argv[1]
@@ -29,10 +31,40 @@ infile = open(input_name, 'r')
 outfile = open(output_name, 'w')
 
 # read in MAF file
-multiple_alignment = AlignIO.parse(infile, 'maf', alphabet=Gapped(IUPAC.ambiguous_dna, '-'))
+multiple_alignment = list(AlignIO.parse(infile, 'maf', 
+alphabet=Gapped(IUPAC.ambiguous_dna, '-')))
+refList = []
+refGenome = [0]*genomeSize
+
+# get alignments without reference sequence and reverse complement those that
+# are on incorrect strand
+for a in multiple_alignment:
+    if a[0].id.startswith(reference):
+        if a[0].annotations["strand"] == "-1":
+            newAlignment = []
+            for seqRecord in a:
+                seq = seqRecord.reverse_complement(id=True, name=True,
+                    features=True, annotations=True)
+                if seq.annotations["strand"] == "-1":
+                    seq.annotations["strand"] = "+1"
+                    seq.annotations["start"] = int(seq.annotations["start"]) - int(seq.annotations["size"]) + 1
+                elif seq.annotations["strand"] == "+1":
+                    seq.annotations["strand"] = "-1"
+                    seq.annotations["start"] = int(seq.annotations["start"]) + int(seq.annotations["size"]) - 1
+                newAlignment.append(seq)
+            refList.append(MultipleSeqAlignment(newAlignment))
+        else:
+            refList.append(a)
+
+print refGenome.count(0)
+print refGenome.count(1)
+print refGenome.count(2)
+print refGenome.count(3)
+# create new temporary MAF file
+AlignIO.write(refList, input_name + ".tmp", "maf")
 
 # make MAF index file
-idx = MafIO.MafIndex(reference + ".mafindex", input_name, reference)
+idx = MafIO.MafIndex(reference + ".mafindex", input_name + ".tmp", reference)
 
 new_alignment = idx.get_spliced([0], [genomeSize], strand = "+1")
 
