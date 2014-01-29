@@ -17,16 +17,15 @@ from operator import itemgetter
 #nexus alignment
 
 # check for correct arguments
-if len(sys.argv) != 6:
+if len(sys.argv) != 5:
     print("Usage: MAFToNexus.py <reference> <reference genome size> \
-    <total number of sequences> <inputfile> <outputfile>")
+    <inputfile> <outputfile>")
     sys.exit(0)
 
 reference = sys.argv[1]
 genomeSize = int(sys.argv[2])
-numSeq = int(sys.argv[3])
-input_name = sys.argv[4]
-output_prefix = sys.argv[5]
+input_name = sys.argv[3]
+output_prefix = sys.argv[4]
 
 infile = open(input_name, 'r')
 outfile = open(output_prefix, 'w')
@@ -42,7 +41,7 @@ for a in multiple_alignment:
     strainIDs = []
     for seqRecord in a:
         strainIDs.append(seqRecord.id)
-    if len(strainIDs) == numSeq:
+    if reference in strainIDs:
         refInd = strainIDs.index(reference)
         if a[refInd].annotations["strand"] == "-1":
             newAlignment = []
