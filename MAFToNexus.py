@@ -51,10 +51,10 @@ for a in multiple_alignment:
                     features=True, annotations=True)
                 if seq.annotations["strand"] == "-1":
                     seq.annotations["strand"] = "+1"
-                    seq.annotations["start"] = int(seq.annotations["start"]) - int(seq.annotations["size"]) + 1
+                    seq.annotations["start"] = int(seq.annotations["srcSize"]) - int(seq.annotations["start"]) - int(seq.annotations["size"])
                 elif seq.annotations["strand"] == "+1":
                     seq.annotations["strand"] = "-1"
-                    seq.annotations["start"] = int(seq.annotations["start"]) + int(seq.annotations["size"]) - 1
+                    seq.annotations["start"] = int(seq.annotations["srcSize"]) -int(seq.annotations["start"]) + int(seq.annotations["size"]) + 1
                 newAlignment.append(seq)
             refList.append(MultipleSeqAlignment(newAlignment))
         else:
@@ -68,34 +68,14 @@ idx = MafIO.MafIndex(reference + ".mafindex", input_name + ".tmp", reference)
 
 new_alignment = idx.get_spliced([0], [genomeSize], strand = "+1")
 
-AlignIO.write(new_alignment, output_name, "fasta")
+AlignIO.write(new_alignment, output_prefix, "fasta")
 
-# take blocks that contain reference sequence and add them to a list
-#alignment = []
-#for a in multiple_alignment:
-#    if a[0].id.startswith(ref):
-#        alignment.append((int(a[0].annotations["start"]),a))
+fastaFile = open(output_prefix + ".fasta", 'r')
+nexusFile = open(output_prefix + ".nexus", 'w')
 
-# sort the block list by start of ref sequence
-#sorted_alignment = sorted(alignment, key=itemgetter(0))
+alignment = AlignIO.read(output_prefix + ".fasta", 'fasta',
+    alphabet=Gapped(IUPAC.ambiguous_dna, '-'))
+AlignIO.write(alignment, output_prefix + ".nexus", 'nexus')
 
-# make a dictionary for genome sequences
-#genomeDict = {}
-
-# read blocks and edit genome dictionary
-#for block in sorted_alignment:
-#    block = block[1] # get rid of tuple format    
-#    # get start and stop sites for reference
-#    blockStart = int(a[0].annotations["start"])
-#    blockStop = blockStart + int(a[0].annotations["size"])
-#    for seqRecord in block:
-#        strainName = seqRecord.id.split('.')[0]
-#        if strainName not in genomeDict:
-#            # add sequence to genome dictionary
-#            # using '-' as placeholder until actual sequence is added
-#            genomeDict[strainName] = ['-']*genomeSize
-#        genome = genomeDict[strainName]
-#        genome[blockStart:blockStop] = list(seqRecord.seq)
-#        genomeDict[strainName] = genome
-#        
-#outfile.close()
+fastaFile.close()
+nexusFile.close()
