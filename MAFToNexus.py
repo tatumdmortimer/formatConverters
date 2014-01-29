@@ -68,7 +68,7 @@ idx = MafIO.MafIndex(reference + ".mafindex", input_name + ".tmp", reference)
 
 new_alignment = idx.get_spliced([0], [genomeSize], strand = "+1")
 
-AlignIO.write(new_alignment, output_prefix, "fasta")
+AlignIO.write(new_alignment, output_prefix + ".fasta", "fasta")
 
 fastaFile = open(output_prefix + ".fasta", 'r')
 nexusFile = open(output_prefix + ".nexus", 'w')
