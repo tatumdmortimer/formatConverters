@@ -17,30 +17,34 @@ from operator import itemgetter
 #nexus alignment
 
 # check for correct arguments
-if len(sys.argv) != 5:
+if len(sys.argv) != 6:
     print("Usage: MAFToNexus.py <reference> <reference genome size> \
-    <inputfile> <outputfile>")
+    <total number of sequences> <inputfile> <outputfile>")
     sys.exit(0)
 
 reference = sys.argv[1]
 genomeSize = int(sys.argv[2])
-input_name = sys.argv[3]
-output_name = sys.argv[4]
+numSeq = int(sys.argv[3])
+input_name = sys.argv[4]
+output_prefix = sys.argv[5]
 
 infile = open(input_name, 'r')
-outfile = open(output_name, 'w')
+outfile = open(output_prefix, 'w')
 
 # read in MAF file
 multiple_alignment = list(AlignIO.parse(infile, 'maf', 
 alphabet=Gapped(IUPAC.ambiguous_dna, '-')))
 refList = []
-refGenome = [0]*genomeSize
 
-# get alignments without reference sequence and reverse complement those that
+# get alignments with all sequences and reverse complement those that
 # are on incorrect strand
 for a in multiple_alignment:
-    if a[0].id.startswith(reference):
-        if a[0].annotations["strand"] == "-1":
+    strainIDs = []
+    for seqRecord in a:
+        strainIDs.append(seqRecord.id)
+    if len(strainIDs) == numSeq:
+        refInd = strainIDs.index(reference)
+        if a[refInd].annotations["strand"] == "-1":
             newAlignment = []
             for seqRecord in a:
                 seq = seqRecord.reverse_complement(id=True, name=True,
@@ -56,10 +60,6 @@ for a in multiple_alignment:
         else:
             refList.append(a)
 
-print refGenome.count(0)
-print refGenome.count(1)
-print refGenome.count(2)
-print refGenome.count(3)
 # create new temporary MAF file
 AlignIO.write(refList, input_name + ".tmp", "maf")
 
