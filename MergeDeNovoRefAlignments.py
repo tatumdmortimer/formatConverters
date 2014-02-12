@@ -17,8 +17,10 @@ def removeGaps(align, seqID):
         refIndex += 1
     gapFreeAlign = align[:, 0:1]
     for i in range(1, align.get_alignment_length()):
-        if align[refIndex].Seq[0] != '-':
+        if align[refIndex].seq[i] != '-':
             gapFreeAlign = gapFreeAlign + align[:, i:i+1]
+        else:
+            print "Removed position ", i
     return gapFreeAlign 
 
 # check for correct arguments
@@ -32,15 +34,11 @@ refFileName = sys.argv[2]
 reference = sys.argv[3]
 outFileName = sys.argv[4]
 
-deNovoFile = open(deNovoName, 'r')
-refFile = open(refFileName, 'r')
-outFile = open(outFileName. 'w')
-
-deNovoAlign = AlignIO.read(deNovoFile, 'fasta', 
-    alphabet=Gapped(IUPAC.ambiguous_dna, '-'))
-refAlign = AlignIO.read(refFile, 'nexus')
+deNovoAlign = AlignIO.read(deNovoName, 'fasta', alphabet=Gapped(IUPAC.ambiguous_dna, '-'))
+refAlign = AlignIO.read(refFileName, 'nexus')
 
 gapFreeAlign = removeGaps(deNovoAlign, reference)
+print gapFreeAlign.get_alignment_length()
 
 # add sequences from gap free de novo assembly alignment to reference guided
 # assembly alignment (except for reference sequence)
@@ -48,8 +46,5 @@ for seq in gapFreeAlign:
     if seq.id != reference:
         refAlign.append(seq)
 
-AlignIO.write(refAlign, outFile, 'nexus')
+AlignIO.write(refAlign, outFileName, 'nexus')
 
-deNovoFile.close()
-refFile.close()
-outFile.close()
