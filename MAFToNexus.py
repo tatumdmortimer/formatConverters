@@ -51,7 +51,9 @@ for a in multiple_alignment:
                     features=True, annotations=True)
                 if seq.annotations["strand"] == "-1":
                     seq.annotations["strand"] = "+1"
-                    seq.annotations["start"] = int(seq.annotations["srcSize"]) - int(seq.annotations["start"]) - int(seq.annotations["size"])
+                    seq.annotations["start"] = (int(seq.annotations["srcSize"]) 
+                    - int(seq.annotations["start"]) -
+                    int(seq.annotations["size"]))
                 elif seq.annotations["strand"] == "+1":
                     seq.annotations["strand"] = "-1"
                     seq.annotations["start"] = int(seq.annotations["srcSize"]) -int(seq.annotations["start"]) + int(seq.annotations["size"]) + 1
