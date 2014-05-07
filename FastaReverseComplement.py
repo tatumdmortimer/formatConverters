@@ -19,5 +19,4 @@ output_name = sys.argv[2]
 records = [rec.reverse_complement(id="rc_"+rec.id, description = "reverse
 complement") for rec in SeqIO.parse(input_name, "fasta")]
 SeqIO.write(records, output_name, "fasta")
-AlignIO.write(alignment, output_file, 'nexus')
 
