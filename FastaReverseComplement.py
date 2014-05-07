@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-from Bio import AlignIO
-from Bio.Alphabet import IUPAC,Gapped
+from Bio import SeqIO
 import sys
 
 #This script takes a FASTA alignment and converts is to a
@@ -16,7 +15,8 @@ input_name = sys.argv[1]
 output_name = sys.argv[2]
 
 
-records = [rec.reverse_complement(id="rc_"+rec.id, description = "reverse
-complement") for rec in SeqIO.parse(input_name, "fasta")]
+records = [rec.reverse_complement(id=rec.id, 
+        description = "reverse complement")  
+        for rec in SeqIO.parse(input_name, "fasta")]
 SeqIO.write(records, output_name, "fasta")
 
