@@ -67,13 +67,6 @@ def removeGaps(align, seqID):
         gapFreeAlign = gapFreeAlign + align[:, noGapList[i][0]:noGapList[i][1]]
     return gapFreeAlign 
 
-# check for correct arguments
-if len(sys.argv) != 5:
-    print("Usage: MergeDeNovoRefAlignments.py <denovo fasta file> <refguided \
-    nexus file> <reference \
-    name> <outputfile>")
-    sys.exit(0)
-
 args = get_args()
 
 deNovoAlign = AlignIO.read(args.wga, 'fasta', alphabet=Gapped(IUPAC.ambiguous_dna, '-'))
