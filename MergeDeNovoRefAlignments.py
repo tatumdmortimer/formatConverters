@@ -28,7 +28,7 @@ with reference guided assembly alignment')
     parser.add_argument("wga", help="Fasta whole genome alignment", 
         action=FullPaths, type=is_file)
     parser.add_argument("rga", help="Nexus reference guided assembly alignment",
-        action=FullPaths, type=is_dir)
+        action=FullPaths, type=is_file)
     parser.add_argument("reference", help="Name of reference in wga")
     parser.add_argument("outfile", help="Prefix for output alignment")
     return parser.parse_args()
@@ -78,7 +78,7 @@ print gapFreeAlign.get_alignment_length()
 # add sequences from gap free de novo assembly alignment to reference guided
 # assembly alignment (except for reference sequence)
 for seq in gapFreeAlign:
-    if seq.id != reference:
+    if seq.id != args.reference:
         refAlign.append(seq)
 
 AlignIO.write(refAlign, args.outfile + ".nexus", 'nexus')
