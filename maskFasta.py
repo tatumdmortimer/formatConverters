@@ -31,12 +31,20 @@ def getHeaders(file):
    			f.write(line)
 	f.close()
 
-def replaceHeaders(file):
+def getChromosome(bed):
+    """takes chromosome from bed file"""
+    for line in open(bed):
+        line = line.strip()
+        chromosome = line.split('\t')[0]
+        print chromosome
+    return chromosome
+
+def replaceHeaders(file, chromosome):
 	"""changes fasta header names to match bed file"""
 	f = open("headerMatch.fasta", 'w')
 	for line in open(file):
 		if ">" in line:
-   			f.write(">1\n")
+   			f.write(">" + chromosome + "\n")
 		else:
 			f.write(line)
 	f.close()
@@ -70,7 +78,8 @@ split = args.fasta.rsplit('/',1)
 outfile = "masked_" + split[len(split)-1]
 
 getHeaders(args.fasta)
-replaceHeaders(args.fasta)
+chromosome = getChromosome(args.bed)
+replaceHeaders(args.fasta, chromosome)
 if(args.mc):
 	mask("headerMatch.fasta","out.fasta", args.bed, args.mc)
 else:
