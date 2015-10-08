@@ -51,7 +51,7 @@ def replaceHeaders(file, chromosome):
 
 def mask(inn, out, bed, mc='\-'):
 	"""run maskFastaFromBed"""
-	call = 'maskFastaFromBed -fi ' + inn + ' -bed ' + bed +' -fo '+ out +' -mc ' + mc
+	call = '/opt/PepPrograms/bedtools2/bin/maskFastaFromBed -fi ' + inn + ' -bed ' + bed +' -fo '+ out +' -mc ' + mc
 	os.system(call)
 
 def revert(inn, out, names):
