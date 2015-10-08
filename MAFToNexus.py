@@ -35,7 +35,7 @@ outfile = open(output_prefix, 'w')
 multiple_alignment = list(AlignIO.parse(infile, 'maf', 
 alphabet=Gapped(IUPAC.ambiguous_dna, '-')))
 refList = []
-
+refGenome = [0]*genomeSize
 # get alignments with all sequences and reverse complement those that
 # are on incorrect strand
 for a in multiple_alignment:
@@ -44,7 +44,16 @@ for a in multiple_alignment:
         strainIDs.append(seqRecord.id)
     if len(strainIDs) == numSeq:
         refInd = strainIDs.index(reference)
-        if a[refInd].annotations["strand"] == "-1":
+        if a[refInd].seq.count('-') == len(a[refInd].seq):
+            print "block"
+            continue
+        elif a[refInd].annotations["strand"] == "-1":
+            start = int(a[refInd].annotations["srcSize"]) - int(a[refInd].annotations["start"]) - int(a[refInd].annotations["size"])
+            stop = start + int(a[refInd].annotations["size"])
+            for i in range(start,stop):
+                refGenome[i] += 1
+                if refGenome[i] > 1:
+                    print i
             newAlignment = []
             for seqRecord in a:
                 seq = seqRecord.reverse_complement(id=True, name=True,
@@ -60,7 +69,19 @@ for a in multiple_alignment:
                 newAlignment.append(seq)
             refList.append(MultipleSeqAlignment(newAlignment))
         else:
+            start = int(a[refInd].annotations["start"])
+            stop = start + int(a[refInd].annotations["size"])
+            for i in range(start,stop):
+                refGenome[i] += 1
+                if refGenome[i] > 1:
+                    print i
             refList.append(a)
+
+print refGenome.count(0)
+print refGenome.count(1)
+print refGenome.count(2)
+print refGenome.count(3)
+print refGenome.count(4)
 
 # create new temporary MAF file
 AlignIO.write(refList, input_name + ".tmp", "maf")
