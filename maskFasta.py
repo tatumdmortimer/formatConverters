@@ -36,7 +36,6 @@ def getChromosome(bed):
     for line in open(bed):
         line = line.strip()
         chromosome = line.split('\t')[0]
-        print chromosome
     return chromosome
 
 def replaceHeaders(file, chromosome):
