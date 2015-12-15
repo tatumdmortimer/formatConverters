@@ -36,7 +36,6 @@ def getChromosome(bed):
     for line in open(bed):
         line = line.strip()
         chromosome = line.split('\t')[0]
-        print chromosome
     return chromosome
 
 def replaceHeaders(file, chromosome):
@@ -51,7 +50,7 @@ def replaceHeaders(file, chromosome):
 
 def mask(inn, out, bed, mc='\-'):
 	"""run maskFastaFromBed"""
-	call = 'maskFastaFromBed -fi ' + inn + ' -bed ' + bed +' -fo '+ out +' -mc ' + mc
+	call = '/opt/PepPrograms/bedtools2/bin/maskFastaFromBed -fi ' + inn + ' -bed ' + bed +' -fo '+ out +' -mc ' + mc
 	os.system(call)
 
 def revert(inn, out, names):

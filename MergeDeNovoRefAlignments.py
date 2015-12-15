@@ -45,7 +45,7 @@ def removeGaps(align, seqID):
     gapRegion = False
     noGapStart = 0
     noGapStop = 0
-    for i in range(1, align.get_alignment_length()):
+    for i in range(0, align.get_alignment_length()):
         if align[refIndex].seq[i] == '-':
             if not gapRegion:
                 noGapStop = i
