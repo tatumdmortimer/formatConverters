@@ -2,7 +2,7 @@
 
 #import required libraries
 import sys
-sys.path.insert(1, "/home/peplab/src/alignio-maf")
+sys.path.insert(1, "/opt/PepPrograms/alignio-maf")
 try:
     from Bio import AlignIO
     from Bio.AlignIO import MafIO
