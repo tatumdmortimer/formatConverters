@@ -16,3 +16,12 @@ Requirements: Biopython (http://biopython.org/)
 Current Versions: Python 2.7.3, Biopython 1.63
 
 Usage: FastaToNexus.py [inputfile] [outputfile]
+
+###gappedVCF.py
+Replaces reference allele with a '-' in the VCF output from snp-sites at sites where the is a gap in the alignment.
+
+Requirements: Biopython (http://biopython.org/)
+
+Current Versions: Python 2.7.3, Biopython 1.63
+
+Usage: gappedVCF.py [vcf] [fasta]
