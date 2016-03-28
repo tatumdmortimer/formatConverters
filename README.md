@@ -43,6 +43,16 @@ Converts SNP table from Kodon to input for LDhat. **This script has not been tes
 
 Usage: KodonToLDhat.py [inputfile] [outputfile prefix] [reference name] [N or ALL]
 
+###KodonToNexus.py
+Converts SNP table from Kodon to Nexus format alignment. **This script has not been tested recently.**
+
+Usage: Usage:  KodonToNexus.py  [input file] [outputfile] [name of reference sequence] [N or ALL]
+
+###KodonToPhylip.py
+Converts SNP table from Kodon to Phylip format alignment. **This script has not been tested recently.**
+
+Usage: KodonToPhylip.py [inputfile] [outputfile] [namefile] [number of sequences] [number of nucleotides in alignment]
+
 ###gappedVCF.py
 Replaces reference allele with a '-' in the VCF output from snp-sites at sites where the is a gap in the alignment.
 
