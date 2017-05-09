@@ -8,6 +8,11 @@ Converts the standard output of BRATNextGen (http://www.helsinki.fi/bsg/software
 
 Usage: BratStandardtoTabular.py [inputfile] [outputfile]
 
+###EMBLtoBED.py
+Converts EMBL annotation format to BED format (note score is automatically 1000).
+
+Usage: EMBLtoBED.py [emblfile]
+
 ###FastaReverseComplement.py
 Reverse complements entries in a fasta file (can contain multiple records)
 
