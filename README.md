@@ -8,10 +8,16 @@ Converts the standard output of BRATNextGen (http://www.helsinki.fi/bsg/software
 
 Usage: BratStandardtoTabular.py [inputfile] [outputfile]
 
-###EMBLtoBED.py
+### EMBLtoBED.py
 Converts EMBL annotation format to BED format (note score is automatically 1000).
 
 Usage: EMBLtoBED.py [emblfile]
+
+### EMBLtoGFF.py
+Converts EMBL annotation header to GFF format. Also requires the core genome alignment with the "reference"
+genome as the first sequence".
+
+Usage: EMBLtoGFF.py [emblfile] [alignment]
 
 ###FastaReverseComplement.py
 Reverse complements entries in a fasta file (can contain multiple records)
